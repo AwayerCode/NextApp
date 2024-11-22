@@ -1,6 +1,22 @@
 import styles from './about.module.css'
 import Link from 'next/link'
 
+async function getInfos() {
+  // 添加完整的 URL
+  const res = await fetch('http://localhost:3000/api/infos', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  
+  if (!res.ok) {
+    throw new Error('Failed to fetch data')
+  }
+  
+  return res.json()
+}
+
 function AboutBottom() {
   return (
     <div className="flex justify-center items-center">
@@ -11,8 +27,9 @@ function AboutBottom() {
   )
 }
 
-
-export default function AboutPage() {
+export default async function AboutPage() {
+  const infos = await getInfos()
+  console.log(infos)
   return (
     // 混合使用 Tailwind 和 CSS Module
     <div className={`min-h-screen bg-background ${styles.aboutContainer}`}>
@@ -52,6 +69,19 @@ export default function AboutPage() {
           </div>
         </section>
         <AboutBottom />
+        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
+          <h2 className="text-2xl font-semibold mb-4">系统信息</h2>
+          <div className="space-y-2">
+            <p className="flex items-center gap-2">
+              <span>🏷️</span>
+              <span>名称: {infos.data.name}</span>
+            </p>
+            <p className="flex items-center gap-2"> 
+              <span>📌</span>
+              <span>版本: {infos.data.version}</span>
+            </p>
+          </div>
+        </div>
       </main>
     </div>
   )
