@@ -9,14 +9,14 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// 数据模型
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id        Int         @id @default(autoincrement())
+  email     String      @unique
   name      String?
   posts     Post[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  images    ImageInfo[] // 添加这行
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   age       Int?
 }
 
@@ -32,8 +32,12 @@ model Post {
 }
 
 model ImageInfo {
-  id        Int      @id @default(autoincrement())
-  url       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  url         String
+  title       String?
+  description String?
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
