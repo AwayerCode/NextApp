@@ -1,5 +1,16 @@
 import { prisma } from './prisma'
-import { storage } from './storage' 
+import { storage } from './storage'
+
+// 定义文件上传参数的接口
+interface UploadFileData {
+  file: {
+    buffer: Buffer
+    originalname: string
+  }
+  userId: number
+  title?: string
+  description?: string
+}
 
 export async function getUsers() {
   return prisma.user.findMany()
@@ -38,7 +49,7 @@ export async function deleteUser(id: number) {
 }
 
 export const images = {
-    async create({ file, userId, title, description }) {
+    async create({ file, userId, title, description }: UploadFileData) {
         const filename = storage.generateFilename(file.originalname)
         const url = await storage.saveFile(file.buffer, filename)
     

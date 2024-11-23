@@ -21,12 +21,12 @@ export function ImageEdit({ image, onClose, onSave }: ImageEditProps) {
     setLoading(true)
 
     try {
-      const response = await fetch(`/api/images/${image.id}`, {
+      const response = await fetch('/api/images', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, description }),
+        body: JSON.stringify({ id: image.id, title, description }),
       })
 
       if (!response.ok) throw new Error('Update failed')

@@ -4,9 +4,20 @@ import { useState, useEffect } from 'react'
 import { ImageCard } from './ImageCard'
 import { ImageEdit } from './ImageEdit'
 
+// 定义图片类型接口
+interface Image {
+  id: number
+  url: string
+  title?: string
+  description?: string
+  userId: number
+  createdAt: string
+  updatedAt: string
+}
+
 export function ImageList() {
-  const [images, setImages] = useState([])
-  const [editingImage, setEditingImage] = useState(null)
+  const [images, setImages] = useState<Image[]>([])
+  const [editingImage, setEditingImage] = useState<Image | null>(null)
   const [loading, setLoading] = useState(true)
 
   const fetchImages = async () => {
@@ -30,7 +41,7 @@ export function ImageList() {
     if (!confirm('确定要删除这张图片吗？')) return
 
     try {
-      const response = await fetch(`/api/images/${id}`, {
+      const response = await fetch(`/api/images?id=${id}`, {
         method: 'DELETE',
       })
 

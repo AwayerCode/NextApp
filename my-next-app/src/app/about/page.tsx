@@ -1,20 +1,15 @@
 import styles from './about.module.css'
 import Link from 'next/link'
 
+// 直接返回静态数据，避免在构建时请求API
 async function getInfos() {
-  // 添加完整的 URL
-  const res = await fetch('http://localhost:3000/api/infos', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  
-  if (!res.ok) {
-    throw new Error('Failed to fetch data')
+  // 在实际开发中，你可能想从配置文件或环境变量中获取这些信息
+  return {
+    data: {
+      name: "Next.js App",
+      version: "1.0.0"
+    }
   }
-  
-  return res.json()
 }
 
 function AboutBottom() {
@@ -29,14 +24,12 @@ function AboutBottom() {
 
 export default async function AboutPage() {
   const infos = await getInfos()
-  console.log(infos)
+  
   return (
-    // 混合使用 Tailwind 和 CSS Module
     <div className={`min-h-screen bg-background ${styles.aboutContainer}`}>
       <main className="max-w-4xl mx-auto p-8">
         <h1 className="text-4xl font-bold mb-8">关于我们</h1>
         
-        {/* 使用自定义动画效果的部分 */}
         <section className={`
           bg-white dark:bg-gray-800 
           rounded-lg p-6 shadow-lg mb-8
@@ -49,7 +42,6 @@ export default async function AboutPage() {
           </p>
         </section>
 
-        {/* 联系方式部分 */}
         <section className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
           <h2 className="text-2xl font-semibold mb-4">联系我们</h2>
           <div className="space-y-2">
