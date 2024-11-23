@@ -37,8 +37,6 @@ export async function deleteUser(id: number) {
   })
 }
 
-// ... 保留现有的代码 ...
-
 export const images = {
     async create({ file, userId, title, description }) {
         const filename = storage.generateFilename(file.originalname)
