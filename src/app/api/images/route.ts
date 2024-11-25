@@ -1,19 +1,13 @@
 import { NextResponse } from 'next/server'
 import { images } from '@/lib/db'
 
-// 修改 ImageInfo 接口以匹配数据库返回的类型
 interface ImageInfo {
   id: number
   url: string
   title: string | null
   description: string | null
-  userId: number
   createdAt: Date
   updatedAt: Date
-  user?: {
-    id: number
-    name: string | null
-  }
 }
 
 interface ErrorResponse {
@@ -25,6 +19,9 @@ type ApiResponse<T> = NextResponse<T | ErrorResponse>
 
 export async function GET(): Promise<ApiResponse<ImageInfo[]>> {
   try {
+    // 先同步文件系统和数据库
+    await images.syncWithUploadFolder()
+    // 然后获取所有图片
     const imageList = await images.findMany()
     return NextResponse.json(imageList)
   } catch (error) {
@@ -42,7 +39,6 @@ export async function POST(request: Request): Promise<ApiResponse<ImageInfo>> {
     const file = formData.get('file')
     const title = formData.get('title') as string
     const description = formData.get('description') as string
-    const userId = parseInt(formData.get('userId') as string)
 
     if (!file || !(file instanceof Blob)) {
       return NextResponse.json(
@@ -59,7 +55,6 @@ export async function POST(request: Request): Promise<ApiResponse<ImageInfo>> {
         buffer,
         originalname: filename,
       },
-      userId,
       title,
       description
     })
