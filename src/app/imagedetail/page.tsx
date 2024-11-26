@@ -1,57 +1,57 @@
-import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import { images } from '@/lib/db'
+import Image from 'next/image'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
-export default function ImageDetail({ params }: { params: { id: string } }) {
-  // 在实际应用中，这里应该从API获取数据
-  const image = {
-    id: params.id,
-    src: '/images/photo1.jpg',
-    title: '美丽的风景照片',
-    author: 'photographer1',
-    views: 1234,
-    uploadTime: '3天前',
-    description: '这是一张美丽的风景照片...'
-  };
+interface PageParams {
+  id: string
+}
 
-  if (!image) return notFound();
+interface Props {
+  params: PageParams
+}
+
+export default async function ImageDetailPage({ params }: Props) {
+  const image = await images.findById(parseInt(params.id))
+
+  if (!image) {
+    notFound()
+  }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      {/* 图片展示区 */}
-      <div className="relative aspect-video mb-4">
-        <Image
-          src={image.src}
-          alt={image.title}
-          fill
-          className="object-contain"
-          priority
-        />
+    <div className="container mx-auto p-4">
+      <div className="mb-4">
+        <Link href="/" className="text-blue-500 hover:underline">
+          返回首页
+        </Link>
       </div>
 
-      {/* 信息区 */}
-      <div className="space-y-4">
-        <h1 className="text-2xl font-bold">{image.title}</h1>
-        
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full overflow-hidden relative">
-            <Image
-              src={`/avatars/${image.author}.jpg`}
-              alt={image.author}
-              fill
-              className="object-cover"
-            />
-          </div>
-          
-          <div>
-            <p className="font-medium">{image.author}</p>
-            <p className="text-sm text-gray-600">
-              {image.views} 次查看 • {image.uploadTime}
-            </p>
-          </div>
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="relative w-full" style={{ height: '70vh' }}>
+          <Image
+            src={image.url}
+            alt={image.title || '未命名图片'}
+            fill
+            style={{ objectFit: 'contain' }}
+            priority
+            unoptimized
+          />
         </div>
 
-        <p className="text-gray-700">{image.description}</p>
+        <div className="p-6">
+          <h1 className="text-2xl font-bold mb-2">
+            {image.title || '未命名图片'}
+          </h1>
+          
+          {image.description && (
+            <p className="text-gray-600 mb-4">{image.description}</p>
+          )}
+          
+          <div className="text-sm text-gray-500">
+            上传时间：{new Date(image.createdAt).toLocaleString('zh-CN')}
+          </div>
+        </div>
       </div>
     </div>
-  );
+  )
 }
