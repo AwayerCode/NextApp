@@ -1,38 +1,35 @@
 import Image from 'next/image';
-import Link from 'next/link';
 
 interface ImageCardProps {
-    id: string;
     src: string;
     title: string;
     uploadTime: string;
   }
 
 export default function ImageCard({
-  id,
   src,
   title,
   uploadTime
 }: ImageCardProps) {
   return (
-    <Link href={`/images/${id}`}>
-      <div className="cursor-pointer hover:opacity-90 transition-opacity">
-        <div className="relative aspect-video mb-2">
-          <Image
-            src={src}
-            alt={title}
-            fill
-            className="object-cover rounded-lg"
-          />
-        </div>
-        
-        <div>
-          <h3 className="font-medium line-clamp-2">{title}</h3>
-          <p className="text-sm text-gray-600">
-            上传时间：{uploadTime}
-          </p>
-        </div>
+    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+      <div className="relative aspect-video">
+        <Image
+          src={src}
+          alt={title}
+          fill
+          className="object-cover rounded-t-lg"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          unoptimized
+        />
       </div>
-    </Link>
+      
+      <div className="p-4">
+        <h3 className="font-medium text-gray-900 line-clamp-2">{title}</h3>
+        <p className="text-sm text-gray-500 mt-1">
+          上传时间：{uploadTime}
+        </p>
+      </div>
+    </div>
   );
 }
