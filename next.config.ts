@@ -1,7 +1,11 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // 删除 experimental 配置
+  images: {
+    domains: [
+      'your-bucket.obs.cn-north-4.myhuaweicloud.com'
+    ]
+  }
 };
 
-export default nextConfig;
+module.exports = nextConfig;
