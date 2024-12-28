@@ -21,7 +21,7 @@ export default function Home() {
       setMessage('');
       const urlList = urls.split('\n').filter(url => url.trim());
       
-      await axios.post('http://localhost:3001/api/crawl', {
+      await axios.post('/api/crawl', {
         urls: urlList
       });
       
@@ -36,8 +36,8 @@ export default function Home() {
 
   const fetchResults = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/results');
-      setResults(response.data.items);
+      const response = await axios.get('/api/results');
+      setResults(response.data.items || []);
     } catch (error) {
       setMessage('获取结果失败');
     }
