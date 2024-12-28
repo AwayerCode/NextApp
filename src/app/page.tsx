@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
 interface CrawlResult {
   url: string;
@@ -21,9 +20,17 @@ export default function Home() {
       setMessage('');
       const urlList = urls.split('\n').filter(url => url.trim());
       
-      await axios.post('/api/crawl', {
-        urls: urlList
+      const response = await fetch('/api/crawl', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ urls: urlList }),
       });
+      
+      if (!response.ok) {
+        throw new Error('爬虫启动失败');
+      }
       
       setMessage('爬虫任务已启动');
       fetchResults();
@@ -36,8 +43,12 @@ export default function Home() {
 
   const fetchResults = async () => {
     try {
-      const response = await axios.get('/api/results');
-      setResults(response.data.items || []);
+      const response = await fetch('/api/results');
+      if (!response.ok) {
+        throw new Error('获取结果失败');
+      }
+      const data = await response.json();
+      setResults(data.items || []);
     } catch (error) {
       setMessage('获取结果失败');
     }

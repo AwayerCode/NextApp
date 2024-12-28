@@ -14,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Image Gallery",
-  description: "A modern image gallery application",
+  title: "Crawler",
+  description: "Crawler",
 };
 
 export default function RootLayout({
